@@ -1,0 +1,16 @@
+{% extends "shopapp/base.html" %}
+
+{% block title %}
+Shop Index
+{% endblock %}
+
+{% block body %}
+    {% for header in headers %}
+    <span>{{ header }}: {{ value1 }} + {{ value2 }} = {{ value1|add:value2 }}<br></span>
+    <span>
+        {{ header }}: {% if header|length == 3 %} <span>Header length is 3</span>{% endif %}
+    <br></span>
+    <span>{{ header }}: "Text with spaces" without spaces: {{ "Text with spaces"|cut:" " }}<br></span>
+    <br><br>
+    {% endfor %}
+{% endblock %}
