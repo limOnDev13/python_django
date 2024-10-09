@@ -13,7 +13,7 @@ class Product(models.Model):
 
 class Order(models.Model):
     description = models.TextField(null=True)
-    address = models.CharField(max_length=200)
+    address = models.CharField(max_length=200, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     products = models.ManyToManyField(Product, related_name="orders")
