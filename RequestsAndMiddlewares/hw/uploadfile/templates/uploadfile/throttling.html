@@ -1,0 +1,16 @@
+{% extends "uploadfile/base.html" %}
+
+{% block title %}
+Throttling
+{% endblock %}
+
+{% block body %}
+    <h1> Request History </h1>
+    <div>
+        <ul>
+        {% for request_time in request.history_requests %}
+            <li>{{request_time}}</li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
