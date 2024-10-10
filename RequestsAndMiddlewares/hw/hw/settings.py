@@ -50,6 +50,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    "uploadfile.middlewares.ThrottlingMiddleware",
 ]
 
 ROOT_URLCONF = 'hw.urls'
