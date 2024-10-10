@@ -1,6 +1,17 @@
 from django.contrib import admin
+from django.db.models import QuerySet
+from django.http import HttpRequest
 
 from .models import Product, Order
+
+
+@admin.action(description="Archive products")
+def mark_archived(
+        model_admin: admin.ModelAdmin,
+        request: HttpRequest,
+        queryset: QuerySet
+):
+    queryset.update(archived=True)
 
 
 class OrderInline(admin.TabularInline):
@@ -10,6 +21,9 @@ class OrderInline(admin.TabularInline):
 # Register your models here.
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    actions = [
+        mark_archived,
+    ]
     list_display = "pk", "name", "description", "price", "archived"
     search_fields = "pk", "name", "description"
     inlines = [
