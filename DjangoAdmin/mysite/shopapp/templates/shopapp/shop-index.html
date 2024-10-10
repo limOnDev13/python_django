@@ -1,0 +1,16 @@
+{% extends "shopapp/base.html" %}
+
+{% block title %}
+Shop Index
+{% endblock %}
+
+{% block body %}
+<div>
+    <h1>Available Links:<br></h1>
+    <ul>
+        {% for short, local_link in links %}
+        <li><a href={{ local_link }}>{{short}}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

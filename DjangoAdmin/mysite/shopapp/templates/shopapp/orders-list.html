@@ -1,0 +1,27 @@
+{% extends "shopapp/base.html" %}
+
+{% block title %}
+Orders List
+{% endblock %}
+
+{% block body %}
+<div>
+    <h1>Orders List:<br></h1>
+    <ul>
+        {% for order in orders %}
+        <li>
+            Description: {{order.description}}<br>
+            Address: {{order.address}}<br>
+            Created at: {{order.created_at}}<br>
+            User: {{order.user.username}}<br>
+            products:<br>
+            <ul>
+                {% for product in order.products.all %}
+                <li>{{product.name}}</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
