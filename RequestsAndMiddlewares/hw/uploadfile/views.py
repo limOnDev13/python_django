@@ -1,3 +1,5 @@
+from typing import Dict, Any
+
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
@@ -15,3 +17,8 @@ def upload_file(request: HttpRequest) -> HttpResponse:
         print("Saved file", filename)
 
     return render(request, "uploadfile/upload-file.html")
+
+
+def throttling(request: HttpRequest) -> HttpResponse:
+    context: Dict[str, Any] = {}
+    return render(request, "uploadfile/throttling.html", context=context)
