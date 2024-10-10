@@ -15,6 +15,21 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [
         OrderInline,
     ]
+    fieldsets = [
+        (None, {
+            "fields": ("name", "description"),
+            "description": "Section with base info",
+        }),
+        ("Price", {
+            "fields": ("price", "discount"),
+            "description": "Section with info about price",
+        }),
+        ("Extra", {
+            "fields": ("archived", ),
+            "classes": ("collapse", ),
+            "description": "Extra options",
+        })
+    ]
 
     def get_queryset(self, request):
         return Product.objects.prefetch_related("orders")
