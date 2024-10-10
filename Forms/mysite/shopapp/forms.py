@@ -7,3 +7,9 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = "name", "description", "price", "discount"
+
+
+class OrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = "delivery_address", "promocode", "user", "products"
