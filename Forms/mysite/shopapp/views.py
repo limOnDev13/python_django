@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, redirect, reverse
 
 from .models import Product, Order
-from .forms import ProductForm
+from .forms import ProductForm, OrderForm
 
 
 def shop_index(request: HttpRequest):
@@ -58,3 +58,19 @@ def create_product(request: HttpRequest) -> HttpResponse:
     }
     return render(request, "shopapp/create-product.html", context=context)
 
+
+def create_order(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            form.save()
+        url = reverse("shopapp:orders_list")
+        return redirect(url)
+
+    else:
+        form = OrderForm()
+
+    context = {
+        "form": form
+    }
+    return render(request, "shopapp/create-order.html", context=context)
