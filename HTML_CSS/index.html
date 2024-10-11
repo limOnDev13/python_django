@@ -2,6 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script>
+        document.addEventListener("DOMContentLoaded", function(){
+            var container = document.querySelector('.popup-container');
+            var button_submit = document.querySelector('.close-popup')
+            var popupButtons = document.querySelectorAll('.open-popup');
+            for (let i=0; i < popupButtons.length; i++) {
+                popupButtons[i].addEventListener('click', function(){
+                    container.style.display = 'flex';
+                })
+            }
+            container.addEventListener('click', function(event){
+                if(event.target == container) {
+                container.style.display = 'none';
+                }
+            });
+            button_submit.addEventListener('click', function(){
+                container.style.display = 'none';
+            });
+        })
+    </script>
     <title>Module 7 hw</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -9,6 +29,19 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
+    <div class="popup-container">
+        <div class="popup-form">
+            <div>
+                <input id="name" type="text" name="name" placeholder="Введите ваше имя">
+            </div>
+            <div>
+                <input id="email" type="email" name="email" placeholder="Введите ваш e-mail">
+            </div>
+            <div>
+                <input type="submit" value="Отправить" class="close-popup">
+            </div>
+        </div>
+    </div>
     <header>
         <div class="menu">
             <div><a href="#">Услуги</a></div>
@@ -17,7 +50,7 @@
         </div>
         <div class="phone">
             <div>+7 (499) 995-55-77</div>
-            <div><button class="light_button">Заказать звонок</button></div>
+            <div><button class="light_button open-popup">Заказать звонок</button></div>
         </div>
     </header>
     <section class="brief_information">
@@ -83,7 +116,7 @@
             <p>+7 (499) 995 77 55</p>
         </div>
         <div>
-            <button class="light_button">Заказать звонок</button>
+            <button class="light_button open-popup">Заказать звонок</button>
             <div>
                 <img src="./Социальные сети/fb.png" alt="Not Found">
                 <img src="./Социальные сети/vk.png" alt="Not Found">
