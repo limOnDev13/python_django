@@ -76,7 +76,7 @@ button {
     height: 500px;
     flex-direction: column;
     align-items: flex-start;
-    background-image: url("./Изображение с человеком/man.png");
+    background-image: url("./img_with_man/man.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: right center;
