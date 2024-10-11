@@ -73,9 +73,10 @@ button {
 /*First section - brief information*/
 .brief_information {
     display: flex;
+    height: 500px;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: space-evenly;
     background-image: url("./Изображение с человеком/man.png");
     background-size: contain;
     background-repeat: no-repeat;
