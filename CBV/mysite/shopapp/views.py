@@ -73,3 +73,10 @@ class OrderListView(ListView):
 
 class OrderDetailView(DetailView):
     queryset = Order.objects.select_related("user").prefetch_related("products")
+
+
+class OrderCreateView(CreateView):
+    model = Order
+    fields = "delivery_address", "promocode", "user", "products"
+    template_name_suffix = "_create_form"
+    success_url = reverse_lazy("shopapp:orders_list")
