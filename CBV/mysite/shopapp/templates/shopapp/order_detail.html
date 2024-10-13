@@ -20,5 +20,8 @@
         </ul>
     </li>
   </ul>
-  <p><a href="{% url 'shopapp:orders_list' %}">Back to orders list</a></p>
+<div>
+    <p><a href="{% url 'shopapp:order_update' pk=object.pk %}">Update  order</a></p>
+    <p><a href="{% url 'shopapp:orders_list' %}">Back to orders list</a></p>
+</div>
 {% endblock %}
