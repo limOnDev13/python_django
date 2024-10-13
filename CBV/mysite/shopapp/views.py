@@ -80,3 +80,15 @@ class OrderCreateView(CreateView):
     fields = "delivery_address", "promocode", "user", "products"
     template_name_suffix = "_create_form"
     success_url = reverse_lazy("shopapp:orders_list")
+
+
+class OrderUpdateView(UpdateView):
+    model = Order
+    fields = "delivery_address", "promocode", "user", "products"
+    template_name_suffix = "_update_form"
+
+    def get_success_url(self):
+        return reverse(
+            "shopapp:order_details",
+            kwargs={"pk": self.object.pk}
+        )
