@@ -16,4 +16,5 @@
   </ul>
   <p><a href="{% url 'shopapp:products_list' %}">Back to products list</a></p>
   <p><a href="{% url 'shopapp:product_update' pk=object.pk %}">Update product</a></p>
+  <p><a href="{% url 'shopapp:product_delete' pk=object.pk %}">Delete product</a></p>
 {% endblock %}
