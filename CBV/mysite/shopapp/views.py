@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, reverse
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, UpdateView
+from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView
 
 from .models import Product, Order
 
@@ -47,6 +47,13 @@ class ProductUpdateView(UpdateView):
             "shopapp:product_details",
             kwargs={"pk": self.object.pk}
         )
+
+
+class ProductCreateView(CreateView):
+    model = Product
+    template_name_suffix = "_create_form"
+    fields = "name", "description", "price", "discount", "archived"
+    success_url = reverse_lazy("shopapp:products_list")
 
 
 def orders_list(request: HttpRequest):
