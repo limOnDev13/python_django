@@ -6,9 +6,9 @@
 
 {% block body %}
   <h1>Products:</h1>
-  {% if products %}
+  {% if object_list %}
     <div>
-    {% for product in products %}
+    {% for product in object_list %}
       <div>
         <p>Name: {{ product.name }}</p>
         <p>Price: {{ product.price }}</p>
