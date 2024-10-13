@@ -15,4 +15,5 @@
     <li>Archived: {{object.archived}}</li>
   </ul>
   <p><a href="{% url 'shopapp:products_list' %}">Back to products list</a></p>
+  <p><a href="{% url 'shopapp:product_update' pk=object.pk %}">Update product</a></p>
 {% endblock %}
