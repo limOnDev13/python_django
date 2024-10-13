@@ -2,8 +2,9 @@ from timeit import default_timer
 
 from django.contrib.auth.models import Group
 from django.http import HttpResponse, HttpRequest
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.shortcuts import render, reverse
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, UpdateView
 
 from .models import Product, Order
 
@@ -34,6 +35,18 @@ class ProductsListView(ListView):
 
 class ProductDetailView(DetailView):
     model = Product
+
+
+class ProductUpdateView(UpdateView):
+    model = Product
+    fields = "name", "description", "price", "discount", "archived"
+    template_name_suffix = "_update_form"
+
+    def get_success_url(self):
+        return reverse(
+            "shopapp:product_details",
+            kwargs={"pk": self.object.pk}
+        )
 
 
 def orders_list(request: HttpRequest):
