@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        document.addEventListener("DOMContentLoaded", function(){
+            var container = document.querySelector('.popup-container');
+            var button_submit = document.querySelector('.close-popup')
+            var popupButtons = document.querySelectorAll('.open-popup');
+            for (let i=0; i < popupButtons.length; i++) {
+                popupButtons[i].addEventListener('click', function(){
+                    container.style.display = 'flex';
+                })
+            }
+            container.addEventListener('click', function(event){
+                if(event.target == container) {
+                container.style.display = 'none';
+                }
+            });
+            button_submit.addEventListener('click', function(){
+                container.style.display = 'none';
+            });
+        })
+    </script>
+    <title>Module 7 hw</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <div class="popup-container">
+        <div class="popup-form">
+            <div>
+                <input id="name" type="text" name="name" placeholder="Введите ваше имя">
+            </div>
+            <div>
+                <input id="email" type="email" name="email" placeholder="Введите ваш e-mail">
+            </div>
+            <div>
+                <input type="submit" value="Отправить" class="close-popup">
+            </div>
+        </div>
+    </div>
+    <header>
+        <div class="menu">
+            <div><a href="#">Услуги</a></div>
+            <div><a href="#">Портфолио</a></div>
+            <div><a href="#">Стоимость</a></div>
+        </div>
+        <div class="phone">
+            <div>+7 (499) 995-55-77</div>
+            <div><button class="light_button open-popup">Заказать звонок</button></div>
+        </div>
+    </header>
+    <section class="brief_information">
+        <div><h1>Дмитрий Алексеев</h1></div>
+        <div>Fronted-разработчик и веб-верстальщик</div>
+        <div><button class="blue_button">Узнать больше</button></div>
+    </section>
+    <section>
+        <h2>Что я делаю</h2>
+        <div class="skills">
+            <div>
+                <img src="./icons/1.png" alt="Not found">
+                <p>Верстка лендинг-страниц и сайтов любой сложности</p>
+            </div>
+            <div>
+                <img src="./icons/2.png" alt="Not found">
+                <p>Адаптивная верстка под все браузеры и устройства</p>
+            </div>
+            <div>
+                <img src="./icons/3.png" alt="Not found">
+                <p>Fronted-разработка и программирование</p>
+            </div>
+            <div>
+                <img src="./icons/4.png" alt="Not found">
+                <p>Исправление и доработка существующей вёрстки</p>
+            </div>
+        </div>
+        <button class="light_button">Узнать стоимость</button>
+    </section>
+    <section>
+        <h2>Примеры работ</h2>
+        <div class="examples">
+            <div>
+                <img src="./examples/e1.png" alt="Not found">
+                <p>Сайт психолога Веры Антоновой</p>
+            </div>
+            <div>
+                <img src="./examples/e2.png" alt="Not found">
+                <p>Сайт магазина детской одежды</p>
+            </div>
+            <div>
+                <img src="./examples/e3.png" alt="Not found">
+                <p>Сайт магазина &laquo;Рыболов&raquo;</p>
+            </div>
+        </div>
+    </section>
+    <section class="advertisement">
+        <div>
+            <div>
+                <h2>Адаптивная верстка под все устройства и браузеры от 1000 &#8381; всего за 4 часа.*</h2>
+                <h6>* Срок и стоимость могут отличаться от заявленных и рассчитываются индивидуально, в зависимости от сложности задач.</h6>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div>
+            <p><a href="#">Услуги</a></p>
+            <p><a href="#">Портфолио</a></p>
+            <p><a href="#">Стоимость</a></p>
+        </div>
+        <div>
+            <p>dmitry@alekseev.com</p>
+            <p>+7 (499) 995 77 55</p>
+        </div>
+        <div>
+            <button class="light_button open-popup">Заказать звонок</button>
+            <div>
+                <img src="./networks/fb.png" alt="Not Found">
+                <img src="./networks/vk.png" alt="Not Found">
+                <img src="./networks/you.png" alt="Not Found">
+                <img src="./networks/telegram.png" alt="Not Found">
+                <img src="./networks/inst.png" alt="Not Found">
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
