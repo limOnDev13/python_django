@@ -1,8 +1,9 @@
 from django.urls import path
 
 from .views import (shop_index, groups_list,
-                    ProductsListView, orders_list, ProductDetailView,
-                    ProductUpdateView, ProductCreateView, ProductDeleteView)
+                    ProductsListView, ProductDetailView, ProductDeleteView,
+                    ProductUpdateView, ProductCreateView,
+                    OrderListView)
 
 app_name = "shopapp"
 
@@ -14,5 +15,5 @@ urlpatterns = [
     path("products/<int:pk>/update/", ProductUpdateView.as_view(), name="product_update"),
     path("products/create", ProductCreateView.as_view(), name="product_create"),
     path("products/<int:pk>/delete/", ProductDeleteView.as_view(), name="product_delete"),
-    path("orders/", orders_list, name="orders_list"),
+    path("orders/", OrderListView.as_view(), name="orders_list"),
 ]

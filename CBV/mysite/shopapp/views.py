@@ -67,8 +67,5 @@ class ProductDeleteView(DeleteView):
         return HttpResponseRedirect(success_url)
 
 
-def orders_list(request: HttpRequest):
-    context = {
-        "orders": Order.objects.select_related("user").prefetch_related("products").all(),
-    }
-    return render(request, 'shopapp/orders-list.html', context=context)
+class OrderListView(ListView):
+    queryset = Order.objects.select_related("user").prefetch_related("products")
