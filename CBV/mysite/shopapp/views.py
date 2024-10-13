@@ -69,3 +69,7 @@ class ProductDeleteView(DeleteView):
 
 class OrderListView(ListView):
     queryset = Order.objects.select_related("user").prefetch_related("products")
+
+
+class OrderDetailView(DetailView):
+    queryset = Order.objects.select_related("user").prefetch_related("products")
