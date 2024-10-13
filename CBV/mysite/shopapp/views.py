@@ -3,7 +3,7 @@ from timeit import default_timer
 from django.contrib.auth.models import Group
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from .models import Product, Order
 
@@ -30,6 +30,10 @@ def groups_list(request: HttpRequest):
 
 class ProductsListView(ListView):
     queryset = Product.objects.filter(archived=False)
+
+
+class ProductDetailView(DetailView):
+    model = Product
 
 
 def orders_list(request: HttpRequest):
