@@ -22,3 +22,13 @@ def set_cookie_view(request: HttpRequest) -> HttpResponse:
 def get_cookie_view(request: HttpRequest) -> HttpResponse:
     value = request.COOKIES.get("some_var", "Var not found")
     return HttpResponse(f"Cookie {value=}")
+
+
+def set_session_view(request: HttpRequest) -> HttpResponse:
+    request.session["some_session_var"] = "some session value"
+    return HttpResponse("Session set")
+
+
+def get_session_view(request: HttpRequest) -> HttpResponse:
+    value = request.session.get("some_session_var", "session var not found")
+    return HttpResponse(f"Session {value=}")
