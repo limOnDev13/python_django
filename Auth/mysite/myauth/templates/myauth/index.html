@@ -1,0 +1,16 @@
+{% extends 'myauth/base.html' %}
+
+{% block title %}
+Main page
+{% endblock %}
+
+{% block body %}
+<div>
+    <h1>Django does not allow you to log out when sending a GET request,<br>
+        so I had to create a separate form with an exit button to send a POST request</h1>
+    <form method="post" action="{% url 'myauth:logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+</div>
+{% endblock %}
