@@ -11,3 +11,14 @@ class MyLogoutView(LogoutView):
 
 def main_page(request: HttpRequest) -> HttpResponse:
     return render(request, "myauth/index.html")
+
+
+def set_cookie_view(request: HttpRequest) -> HttpResponse:
+    response = HttpResponse("Setting cookie...")
+    response.set_cookie("some_var", "some_value", max_age=300)
+    return response
+
+
+def get_cookie_view(request: HttpRequest) -> HttpResponse:
+    value = request.COOKIES.get("some_var", "Var not found")
+    return HttpResponse(f"Cookie {value=}")
