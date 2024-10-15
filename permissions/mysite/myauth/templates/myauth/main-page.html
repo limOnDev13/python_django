@@ -11,19 +11,28 @@
     <h1>Mysite</h1>
     </div>
     <div class="log-butttons">
-        {% if user.is_authenticated %}
-        <form method="post" action="{% url 'myauth:logout' %}">
-        {% csrf_token %}
-        <button class="orange_button" type="submit">Logout</button>
-        </form>
+      {% if user.is_authenticated %}
+        <div>
+          <form method="post" action="{% url 'myauth:logout' %}">
+          {% csrf_token %}
+          <button class="orange_button" type="submit">Logout</button>
+          </form>
+        </div>
+      {% else %}
+        <div>
+          <form method="post" action="{% url 'myauth:login' %}">
+            {% csrf_token %}
+            <button class="orange_button" type="submit">Login</button>
+          </form>
+        </div>
+        <div>
+          <form method="post" action="{% url 'myauth:register' %}">
+            {% csrf_token %}
+            <button class="orange_button" type="submit">Register</button>
+          </form>
+        </div>
 
-        {% else %}
-        <form method="post" action="{% url 'myauth:login' %}">
-        {% csrf_token %}
-        <button class="orange_button" type="submit">Login</button>
-        <button class="orange_button" type="button">Register</button>
-        </form>
-        {% endif %}
+      {% endif %}
 
     </div>
 </header>
