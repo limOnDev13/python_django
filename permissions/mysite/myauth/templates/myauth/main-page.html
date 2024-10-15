@@ -1,0 +1,35 @@
+{% extends 'myauth/base.html' %}
+
+{% block title %}
+  About me
+{% endblock %}
+
+
+{% block body %}
+<header>
+    <div class="site-name">
+    <h1>Mysite</h1>
+    </div>
+    <div class="log-butttons">
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'myauth:logout' %}">
+        {% csrf_token %}
+        <button class="orange_button" type="submit">Logout</button>
+        </form>
+
+        {% else %}
+        <form method="post" action="{% url 'myauth:login' %}">
+        {% csrf_token %}
+        <button class="orange_button" type="submit">Login</button>
+        <button class="orange_button" type="button">Register</button>
+        </form>
+        {% endif %}
+
+    </div>
+</header>
+  {% block page %}
+  <section>
+    <h2>Main page</h2>
+  </section>
+  {% endblock %}
+{% endblock %}
