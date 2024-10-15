@@ -8,7 +8,7 @@ Login
 {% block body %}
 <div class="login">
 <h1 align="center">Mysite</h1>
-<h2>Please, log in</h2>
+<h2>{% block welcome %}Please, log in{% endblock %}</h2>
   <form method="post">
     {% csrf_token %}
     {{form.non_field_errors}}
@@ -22,7 +22,7 @@ Login
       {% endif %}
     </div>
     {% endfor %}
-    <button class="orange_button" type="submit">Login</button>
+    <button class="orange_button" type="submit">{% block button_text %}Login{% endblock %}</button>
   </form>
 </div>
 {% endblock %}
