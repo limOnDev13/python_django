@@ -23,13 +23,17 @@ class ProductDetailsView(DetailView):
 class ProductsListView(ListView):
     template_name = "shopapp/products-list.html"
     context_object_name = "products"
-    queryset = Product.objects.filter(archived=False)
+    queryset = Product.objects.filter(archived=False).select_related("created_by")
 
 
 class ProductCreateView(CreateView):
     model = Product
     fields = "name", "price", "description", "discount"
     success_url = reverse_lazy("shopapp:products_list")
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super(ProductCreateView, self).form_valid(form)
 
 
 class ProductUpdateView(UpdateView):
