@@ -2,9 +2,9 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 from django.http import HttpRequest, HttpResponse
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 
 from .models import Profile
 
@@ -34,3 +34,13 @@ class RegisterView(CreateView):
         )
         login(request=self.request, user=user)
         return response
+
+
+class ProfileUpdateView(UpdateView):
+    model = Profile
+    fields = "biography", "agreement_accepted"
+    template_name = "myauth/profile_update.html"
+    success_url = reverse_lazy("myauth:about-me")
+
+    def get_object(self, queryset=None):
+        return self.request.user.profile
