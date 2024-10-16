@@ -1,4 +1,8 @@
 {% extends "myauth/login.html" %}
 
+{% block title %}Register{% endblock %}
 {% block welcome %}Please, sign up{% endblock %}
 {% block button_text %}Register{% endblock %}
+{% block login_or_register %}
+<a href="{% url 'myauth:login' %}"><button class="orange_button" type="button">Login</button></a>
+{% endblock %}

@@ -13,7 +13,7 @@ Login
     {% csrf_token %}
     {{form.non_field_errors}}
     {% for field in form %}
-    <div class="form_field">
+    <div>
       {{fields.errors}}
       <p>{{field.label_tag}}</p>
       <p>{{field}}</p>
@@ -23,6 +23,9 @@ Login
     </div>
     {% endfor %}
     <button class="orange_button" type="submit">{% block button_text %}Login{% endblock %}</button>
+    {% block login_or_register %}
+    <a href="{% url 'myauth:register' %}"><button class="orange_button" type="button">Register</button></a>
+    {% endblock %}
   </form>
 </div>
 {% endblock %}

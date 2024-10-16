@@ -4,7 +4,6 @@
   About me
 {% endblock %}
 
-
 {% block page %}
   <section class="page">
   <h1>User info</h1>
@@ -14,7 +13,10 @@
     <p>First name: {{ user.first_name }}</p>
     <p>Last name: {{ user.last_name }}</p>
     <p>Email: {{ user.email }}</p>
-    <p>Bio: {{ user.profile.bio }}</p>
+    <p>Bio: {{ user.profile.biography }}</p>
+    <a href="{% url 'myauth:update-profile' %}">
+        <button class="orange_button" type="button">Update</button>
+    </a>
   {% else %}
     <h2>User is anonymous</h2>
   {% endif %}
