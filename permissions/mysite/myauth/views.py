@@ -1,10 +1,11 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.views.generic import CreateView, UpdateView
 from django.http import HttpRequest, HttpResponse
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 
 from .models import Profile
 
@@ -13,7 +14,7 @@ def main_page_view(request: HttpRequest) -> HttpResponse:
     return render(request, "myauth/main-page.html")
 
 
-class AboutMeView(TemplateView):
+class AboutMeView(LoginRequiredMixin, TemplateView):
     template_name = "myauth/about-me.html"
 
 
@@ -36,7 +37,7 @@ class RegisterView(CreateView):
         return response
 
 
-class ProfileUpdateView(UpdateView):
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = Profile
     fields = "biography", "agreement_accepted"
     template_name = "myauth/profile_update.html"
