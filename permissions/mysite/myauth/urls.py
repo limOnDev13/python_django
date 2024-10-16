@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 
-from .views import main_page_view, RegisterView
+from .views import main_page_view, RegisterView, ProfileUpdateView
 
 
 from .views import (
@@ -31,4 +31,5 @@ urlpatterns = [
         name="register",
     ),
     path("about-me/", AboutMeView.as_view(), name="about-me"),
+    path("update-profile/", ProfileUpdateView.as_view(), name="update-profile"),
 ]
