@@ -1,7 +1,9 @@
 import re
+from typing import List, Dict, Any
 
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
+from django.http import HttpResponse, HttpRequest, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, reverse
 from django.urls import reverse_lazy
 from django.views import View
@@ -89,3 +91,24 @@ class OrderDetailView(LoginRequiredMixin, DetailView):
         .select_related("user")
         .prefetch_related("products")
     )
+
+
+@user_passes_test(lambda user: user.is_staff)
+def export_orders_to_json(request: HttpRequest) -> JsonResponse:
+    orders: List[Order] = Order.objects.all()
+    result_json: Dict[str, Any] = {
+        "orders": [
+            {
+                "id": order.pk,
+                "delivery_address": order.delivery_address,
+                "promocode": order.promocode,
+                "user_id": order.user.id,
+                "products_ids": [
+                    product.pk
+                    for product in order.products.all()
+                ]
+            }
+            for order in orders
+        ]
+    }
+    return JsonResponse(result_json)
