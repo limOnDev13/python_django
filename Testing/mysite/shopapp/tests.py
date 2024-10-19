@@ -58,6 +58,14 @@ class OrdersExportWithoutFixturesTestCase(TestCase):
         cls.user_with_per.is_staff = True
         cls.user_with_per.save()
 
+        # creating of user without permission
+        cls.user_without_per: User = User.objects.create_user(
+            username="test_user_without_permission",
+            password="test_password"
+        )
+        cls.user_without_per.is_staff = False
+        cls.user_without_per.save()
+
         # creating list of users for orders and products
         cls.users: List[User] = [
             User.objects.create_user(
@@ -67,6 +75,7 @@ class OrdersExportWithoutFixturesTestCase(TestCase):
             for _ in range(5)
         ]
         cls.users.append(cls.user_with_per)
+        cls.users.append(cls.user_without_per)
         # creating list of products
         cls.products: List[Product] = [
             Product.objects.create(
@@ -125,12 +134,18 @@ class OrdersExportWithoutFixturesTestCase(TestCase):
 
     def test_get_orders_info(self):
         response = self.client.get(reverse("shopapp:export-orders"))
-        print(response)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.headers["content-type"], "application/json"
         )
         self.assertJSONEqual(response.content, self.expected_data)
+
+    def test_not_staff_get_orders_info(self):
+        self.client.logout()
+        self.client.force_login(self.user_without_per)
+        response = self.client.get(reverse("shopapp:export-orders"))
+        # check - response is redirect to login
+        self.assertEqual(response.status_code, 302)
 
 
 class OrdersExportTestCase(TestCase):
@@ -149,6 +164,14 @@ class OrdersExportTestCase(TestCase):
         )
         cls.user_with_per.is_staff = True
         cls.user_with_per.save()
+
+        # creating of user without permission
+        cls.user_without_per: User = User.objects.create_user(
+            username="test_user_without_permission",
+            password="test_password"
+        )
+        cls.user_without_per.is_staff = False
+        cls.user_without_per.save()
 
         # assemble expected_data
         cls.expected_data: Dict[str, Any] = {
@@ -170,6 +193,7 @@ class OrdersExportTestCase(TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.user_with_per.delete()
+        cls.user_without_per.delete()
 
     def setUp(self):
         self.client.force_login(self.user_with_per)
@@ -185,3 +209,10 @@ class OrdersExportTestCase(TestCase):
             response.headers["content-type"], "application/json"
         )
         self.assertJSONEqual(response.content, self.expected_data)
+
+    def test_not_staff_get_orders_info(self):
+        self.client.logout()
+        self.client.force_login(self.user_without_per)
+        response = self.client.get(reverse("shopapp:export-orders"))
+        # check - response is redirect to login
+        self.assertEqual(response.status_code, 302)
