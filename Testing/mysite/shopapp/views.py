@@ -1,49 +1,49 @@
-from timeit import default_timer
+import re
 
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
 from django.shortcuts import render, reverse
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.models import Permission
 
 from .models import Product, Order
 
 
 class ShopIndexView(View):
     def get(self, request: HttpRequest) -> HttpResponse:
-        products = [
-            ('Laptop', 1999),
-            ('Desktop', 2999),
-            ('Smartphone', 999),
-        ]
         context = {
-            "time_running": default_timer(),
-            "products": products,
         }
         return render(request, 'shopapp/shop-index.html', context=context)
 
 
-class ProductDetailsView(DetailView):
+class ProductDetailsView(LoginRequiredMixin, DetailView):
     template_name = "shopapp/products-details.html"
     model = Product
     context_object_name = "product"
 
 
-class ProductsListView(ListView):
+class ProductsListView(LoginRequiredMixin, ListView):
     template_name = "shopapp/products-list.html"
-    # model = Product
     context_object_name = "products"
-    queryset = Product.objects.filter(archived=False)
+    queryset = Product.objects.filter(archived=False).select_related("created_by")
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(PermissionRequiredMixin, CreateView):
+    # permissions
+    permission_required = "shopapp.add_product",
+
     model = Product
     fields = "name", "price", "description", "discount"
     success_url = reverse_lazy("shopapp:products_list")
 
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super(ProductCreateView, self).form_valid(form)
 
-class ProductUpdateView(UpdateView):
+
+class ProductUpdateView(UserPassesTestMixin, UpdateView):
     model = Product
     fields = "name", "price", "description", "discount"
     template_name_suffix = "_update_form"
@@ -54,8 +54,17 @@ class ProductUpdateView(UpdateView):
             kwargs={"pk": self.object.pk},
         )
 
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
 
-class ProductDeleteView(DeleteView):
+        match = re.search(r"/(\d+)/update/$", self.request.path)
+        product_id: int = int(match.group(1))
+        return (self.request.user.has_perm("shopapp.change_product")
+                and Product.objects.filter(id=product_id).first())
+
+
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     success_url = reverse_lazy("shopapp:products_list")
 
@@ -74,8 +83,7 @@ class OrdersListView(LoginRequiredMixin, ListView):
     )
 
 
-class OrderDetailView(PermissionRequiredMixin, DetailView):
-    permission_required = "shopapp.view_order"
+class OrderDetailView(LoginRequiredMixin, DetailView):
     queryset = (
         Order.objects
         .select_related("user")
