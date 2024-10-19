@@ -131,3 +131,57 @@ class OrdersExportWithoutFixturesTestCase(TestCase):
             response.headers["content-type"], "application/json"
         )
         self.assertJSONEqual(response.content, self.expected_data)
+
+
+class OrdersExportTestCase(TestCase):
+    fixtures = (
+        "auth_user-fixture.json",
+        "shopapp_order-fixture.json",
+        "shopapp_products-fixture.json"
+    )
+
+    @classmethod
+    def setUpClass(cls):
+        # creating of user with permission
+        cls.user_with_per: User = User.objects.create_user(
+            username="test_user_with_permission",
+            password="test_password"
+        )
+        cls.user_with_per.is_staff = True
+        cls.user_with_per.save()
+
+        # assemble expected_data
+        cls.expected_data: Dict[str, Any] = {
+            "orders": [
+                {
+                    "id": order.pk,
+                    "delivery_address": order.delivery_address,
+                    "promocode": order.promocode,
+                    "user_id": order.user.pk,
+                    "products_ids": [
+                        product.pk
+                        for product in order.products.all()
+                    ]
+                }
+                for order in Order.objects.all()
+            ],
+        }
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.user_with_per.delete()
+
+    def setUp(self):
+        self.client.force_login(self.user_with_per)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_get_orders_info(self):
+        response = self.client.get(reverse("shopapp:export-orders"))
+        print(response)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.headers["content-type"], "application/json"
+        )
+        self.assertJSONEqual(response.content, self.expected_data)
