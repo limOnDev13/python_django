@@ -1,0 +1,17 @@
+{% extends 'myauth/main-page.html' %}
+
+{% block title %}
+  Update profile
+{% endblock %}
+
+
+{% block page %}
+  <section class="page">
+  <h1>Update avatar</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>Avatar</p>
+        <p>{{form.avatar}}</p>
+        <button class="orange_button" type="submit">Update</button>
+    </form>
+{% endblock %}

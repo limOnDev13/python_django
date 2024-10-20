@@ -1,16 +1,20 @@
-from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.views import LogoutView
-from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.contrib.auth import authenticate, login
-from django.urls import reverse_lazy
-from django.views import View
-from django.views.generic import TemplateView, CreateView
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
+from django.shortcuts import render
+from django.views.generic import CreateView, UpdateView, TemplateView, ListView, DetailView
+from django.http import HttpRequest, HttpResponse
+from django.urls import reverse_lazy, reverse
 
 from .models import Profile
 
 
-class AboutMeView(TemplateView):
+def main_page_view(request: HttpRequest) -> HttpResponse:
+    return render(request, "myauth/main-page.html")
+
+
+class AboutMeView(LoginRequiredMixin, TemplateView):
     template_name = "myauth/about-me.html"
 
 
@@ -21,7 +25,7 @@ class RegisterView(CreateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        Profile.objects.create(user=self.object)
+
         username = form.cleaned_data.get("username")
         password = form.cleaned_data.get("password1")
         user = authenticate(
@@ -33,34 +37,37 @@ class RegisterView(CreateView):
         return response
 
 
-class MyLogoutView(LogoutView):
-    next_page = reverse_lazy("myauth:login")
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    model = Profile
+    fields = "biography", "agreement_accepted", "avatar"
+    template_name = "myauth/profile_update.html"
+    success_url = reverse_lazy("myauth:about-me")
+
+    def get_object(self, queryset=None):
+        return self.request.user.profile
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def set_cookie_view(request: HttpRequest) -> HttpResponse:
-    response = HttpResponse("Cookie set")
-    response.set_cookie("fizz", "buzz", max_age=3600)
-    return response
+class UserListView(ListView):
+    queryset = User.objects.select_related("profile")
+    template_name = "myauth/user_list.html"
 
 
-def get_cookie_view(request: HttpRequest) -> HttpResponse:
-    value = request.COOKIES.get("fizz", "default value")
-    return HttpResponse(f"Cookie value: {value!r}")
+class UserDetailView(DetailView):
+    queryset = User.objects.select_related("profile")
+    template_name = "myauth/about-user.html"
+    context_object_name = "object"
 
 
-@permission_required("myauth.view_profile", raise_exception=True)
-def set_session_view(request: HttpRequest) -> HttpResponse:
-    request.session["foobar"] = "spameggs"
-    return HttpResponse("Session set!")
+class AvatarUpdateView(UserPassesTestMixin, UpdateView):
+    model = Profile
+    fields = "avatar",
+    template_name = "myauth/avatar_update.html"
 
+    def get_success_url(self):
+        return reverse(
+            "myauth:about-user",
+            kwargs={"pk": self.object.pk},
+        )
 
-@login_required
-def get_session_view(request: HttpRequest) -> HttpResponse:
-    value = request.session.get("foobar", "default")
-    return HttpResponse(f"Session value: {value!r}")
-
-
-class FooBarView(View):
-    def get(self, request: HttpRequest) -> JsonResponse:
-        return JsonResponse({"foo": "bar", "spam": "eggs"})
+    def test_func(self):
+        return self.request.user.is_staff or self.get_object().pk == self.request.user.pk
