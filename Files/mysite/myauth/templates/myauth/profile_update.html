@@ -9,8 +9,10 @@
   <section class="page">
   <h1>Update profile</h1>
   {% if user.is_authenticated %}
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        <p>Avatar</p>
+        <p>{{form.avatar}}</p>
         <p>Biography</p>
         <p>{{form.biography}}</p>
         <p>Agreement accepted: {{form.agreement_accepted}}</p>
