@@ -9,6 +9,16 @@
   <h1>User info</h1>
   {% if user.is_authenticated %}
     <h2>Detail</h2>
+    <p>
+        {% if user.profile.avatar %}
+        <img src="{{user.profile.avatar.url}}"
+             alt="{{user.profile.avatar.name}}"
+             width="200"
+        >
+        {% else %}
+        No avatar
+        {% endif %}
+    </p>
     <p>Username: {{ user.username }}</p>
     <p>First name: {{ user.first_name }}</p>
     <p>Last name: {{ user.last_name }}</p>
