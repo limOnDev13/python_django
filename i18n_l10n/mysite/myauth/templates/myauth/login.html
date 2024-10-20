@@ -1,16 +1,31 @@
-{% extends 'myauth/base.html' %}
+{% extends "myauth/base.html" %}
+{% load static %}
 
 {% block title %}
-  Login
+Login
 {% endblock %}
 
 {% block body %}
-
+<div class="login">
+<h1 align="center">Mysite</h1>
+<h2>{% block welcome %}Please, log in{% endblock %}</h2>
   <form method="post">
     {% csrf_token %}
-
-    {{ form.as_p }}
-
-    <button type="submit">Login</button>
+    {{form.non_field_errors}}
+    {% for field in form %}
+    <div>
+      {{fields.errors}}
+      <p>{{field.label_tag}}</p>
+      <p>{{field}}</p>
+      {% if field.help_text %}
+        <p>{{field.help_text|safe}}</p>
+      {% endif %}
+    </div>
+    {% endfor %}
+    <button class="orange_button" type="submit">{% block button_text %}Login{% endblock %}</button>
+    {% block login_or_register %}
+    <a href="{% url 'myauth:register' %}"><button class="orange_button" type="button">Register</button></a>
+    {% endblock %}
   </form>
+</div>
 {% endblock %}

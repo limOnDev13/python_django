@@ -1,33 +1,18 @@
-{% extends 'shopapp/base.html' %}
+{% extends 'shopapp/main-page.html' %}
 
 {% block title %}
   Product #{{ product.pk }}
 {% endblock %}
 
-{% block body %}
+{% block page %}
+<section>
   <h1>Product <strong>{{ product.name }}</strong></h1>
   <div>
-    <div>Description: <em>{{ product.description }}</em></div>
-    <div>Price: {{ product.price }}</div>
-    <div>Discount: {{ product.discount }}</div>
-    <div>Archived: {{ product.archived }}</div>
-
-    {% if product.preview %}
-      <img src="{{ product.preview.url }}" alt="{{ product.preview.name }}">
-    {% endif %}
-
-    <h3>Images:</h3>
-    <div>
-      {% for img in product.images.all %}
-        <div>
-          <img src="{{ img.image.url }}" alt="{{ img.image.name }}">
-          <div>{{ img.description }}</div>
-        </div>
-      {% empty %}
-        <div>No images uploaded yet</div>
-      {% endfor %}
-
-    </div>
+    <p>Description: <em>{{ product.description|linebreaks }}</em></p>
+    <p>Price: {{ product.price }}</p>
+    <p>Discount: {{ product.discount }}</p>
+    <p>Created by {{product.created_by}}</p>
+    <p>Archived: {{ product.archived }}</p>
   </div>
   <div>
     <a href="{% url 'shopapp:product_update' pk=product.pk %}">Update product</a>
@@ -38,4 +23,5 @@
   <div>
     <a href="{% url 'shopapp:products_list' %}">Back to products list</a>
   </div>
+</section>
 {% endblock %}

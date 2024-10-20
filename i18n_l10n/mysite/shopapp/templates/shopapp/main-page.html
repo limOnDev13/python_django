@@ -1,0 +1,57 @@
+{% extends 'myauth/base.html' %}
+
+{% block title %}
+  Mysite
+{% endblock %}
+
+
+{% block body %}
+<header>
+    <div class="site-name">
+    <h1>Mysite</h1>
+    </div>
+    <div class="refs">
+        <div class="menu">
+            <div>
+                <a href="{% url 'myauth:about-me' %}">Profile</a>
+            </div>
+            <div>
+                <a href="{% url 'shopapp:products_list' %}">Products</a>
+            </div>
+            <div>
+                <a href="{% url 'shopapp:orders_list' %}">Orders</a>
+            </div>
+        </div>
+        <div class="log-butttons">
+          {% if user.is_authenticated %}
+            <div>Hello, {{user.username}}!</div>
+            <div>
+              <form method="post" action="{% url 'myauth:logout' %}">
+              {% csrf_token %}
+              <button class="orange_button" type="submit">Logout</button>
+              </form>
+            </div>
+          {% else %}
+            <div>
+              <form method="post" action="{% url 'myauth:login' %}">
+                {% csrf_token %}
+                <button class="orange_button" type="submit">Login</button>
+              </form>
+            </div>
+            <div>
+              <form method="post" action="{% url 'myauth:register' %}">
+                {% csrf_token %}
+                <button class="orange_button" type="submit">Register</button>
+              </form>
+            </div>
+          {% endif %}
+        </div>
+    </div>
+
+</header>
+  {% block page %}
+  <section>
+    <h2>Main page</h2>
+  </section>
+  {% endblock %}
+{% endblock %}
