@@ -1,9 +1,12 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.translation import gettext as _
 
 
 class Product(models.Model):
     class Meta:
+        verbose_name = _("name of product model")
+        verbose_name_plural = _("plural name of product model")
         ordering = ["name", "price"]
 
     name = models.CharField(max_length=100)
@@ -19,6 +22,10 @@ class Product(models.Model):
 
 
 class Order(models.Model):
+    class Meta:
+        verbose_name = _("name of order model")
+        verbose_name_plural = _("plural name of order model")
+
     delivery_address = models.TextField(null=True, blank=True)
     promocode = models.CharField(max_length=20, null=False, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
