@@ -1,0 +1,25 @@
+{% extends 'myauth/main-page.html' %}
+
+{% block title %}
+  Users List
+{% endblock %}
+
+{% block page %}
+  <section class="page">
+      <h1>Users list</h1>
+        <ul>
+          {% for user in object_list %}
+            <li>
+                <a href="{% url 'myauth:about-user' pk=user.pk %}">
+                    <p>
+                        {% if user.profile.avatar %}
+                        <img src="{{user.profile.avatar.url}}" alt="{{user.profile.avatar.name}}" width="200">
+                        {% endif %}
+                    </p>
+                    <p>{{user.username}}</p>
+                </a>
+            </li>
+          {% endfor %}
+        </ul>
+
+{% endblock %}
