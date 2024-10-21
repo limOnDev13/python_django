@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-20 20:39+0500\n"
+"POT-Creation-Date: 2024-10-21 13:39+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: .\mysite\settings.py:116
 msgid "English"
 msgstr "English"
@@ -40,3 +41,87 @@ msgstr "Order"
 #: .\shopapp\models.py:27
 msgid "plural name of order model"
 msgstr "Orders"
+
+#: .\shopapp\templates\shopapp\main-page.html:18
+msgctxt "profile from menu"
+msgid "Profile"
+msgstr ""
+
+#: .\shopapp\templates\shopapp\main-page.html:21
+msgctxt "products from menu"
+msgid "Products"
+msgstr ""
+
+#: .\shopapp\templates\shopapp\main-page.html:24
+msgctxt "orders from menu"
+msgid "Orders"
+msgstr ""
+
+#: .\shopapp\templates\shopapp\main-page.html:29
+#, python-format
+msgid "Hello, %(username)s!"
+msgstr ""
+
+#: .\shopapp\templates\shopapp\main-page.html:33
+msgctxt "button logout"
+msgid "Logout"
+msgstr ""
+
+#: .\shopapp\templates\shopapp\main-page.html:40
+msgctxt "button login"
+msgid "Login"
+msgstr ""
+
+#: .\shopapp\templates\shopapp\main-page.html:46
+msgctxt "button register"
+msgid "Register"
+msgstr ""
+
+#: .\shopapp\templates\shopapp\main-page.html:56
+msgid "Main page"
+msgstr ""
+
+#: .\shopapp\templates\shopapp\order_detail.html:6
+#, python-format
+msgctxt "Title of page order details"
+msgid "Order #%(object_pk)s details"
+msgstr ""
+
+#: .\shopapp\templates\shopapp\order_detail.html:11
+#, python-format
+msgctxt "h1 order details"
+msgid "Order #%(object_pk)s"
+msgstr ""
+
+#: .\shopapp\templates\shopapp\order_detail.html:14
+#, python-format
+msgid ""
+"\n"
+"    <p>Order by %(order_by_user)s</p>\n"
+"    "
+msgstr ""
+
+#: .\shopapp\templates\shopapp\order_detail.html:17
+#, python-format
+msgid "Promocode: <code>%(promo)s</code>"
+msgstr ""
+
+#: .\shopapp\templates\shopapp\order_detail.html:18
+#, python-format
+msgid "Delivery address: %(address)s"
+msgstr ""
+
+#: .\shopapp\templates\shopapp\order_detail.html:20
+msgctxt "list of products in order"
+msgid "Products in order"
+msgstr ""
+
+#: .\shopapp\templates\shopapp\order_detail.html:23
+#, python-format
+msgid "%(name)s for $%(price)s"
+msgstr ""
+
+#: .\shopapp\templates\shopapp\order_detail.html:30
+msgctxt "ref on page with order details"
+msgid "Back to orders"
+msgstr ""
