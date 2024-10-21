@@ -1,0 +1,30 @@
+{% extends 'myauth/main-page.html' %}
+
+{% block title %}
+  About me
+{% endblock %}
+
+{% block page %}
+  <section class="page">
+  <h1>User info</h1>
+    <h2>Detail</h2>
+    <p>
+        {% if object.profile.avatar %}
+        <img src="{{object.profile.avatar.url}}"
+             alt="{{object.profile.avatar.name}}"
+             width="200"
+        >
+        {% else %}
+        No avatar
+        {% endif %}
+        {% if user.is_staff or object.pk == user.pk %}
+        <a href="{% url 'myauth:update-avatar' pk=object.pk%}"> Change avatar</a>
+        {% endif %}
+    </p>
+    <p>Username: {{ object.username }}</p>
+    <p>First name: {{ object.first_name }}</p>
+    <p>Last name: {{ object.last_name }}</p>
+    <p>Email: {{ object.email }}</p>
+    <p>Bio: {{ object.profile.biography }}</p>
+    <p><a href="{% url 'myauth:user-list' %}">Back</a></p>
+{% endblock %}

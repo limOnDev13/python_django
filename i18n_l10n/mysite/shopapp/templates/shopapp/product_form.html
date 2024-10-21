@@ -1,20 +1,32 @@
-{% extends 'shopapp/base.html' %}
+{% extends 'shopapp/main-page.html' %}
 
 {% block title %}
   Create product
 {% endblock %}
 
-{% block body %}
+{% block page %}
+<section>
   <h1>Create product</h1>
   <div>
-    <form method="post" enctype="multipart/form-data">
+    <form method="post">
       {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Create</button>
+      {{form.non_field_errors}}
+      {% for field in form %}
+      <div>
+        {{fields.errors}}
+        <p>{{field.label_tag}}</p>
+        <p>{{field}}</p>
+        {% if field.help_text %}
+          <p>{{field.help_text|safe}}</p>
+        {% endif %}
+      </div>
+      {% endfor %}
+      <button class="orange_button" type="submit">Create</button>
     </form>
   </div>
-  <div>
+  <p>
     <a href="{% url 'shopapp:products_list' %}"
     >Back to products list</a>
-  </div>
+  </p>
+</section>
 {% endblock %}

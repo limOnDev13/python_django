@@ -1,10 +1,11 @@
-{% extends 'shopapp/base.html' %}
+{% extends 'shopapp/main-page.html' %}
 
 {% block title %}
   Confirm archive {{ object.name }}
 {% endblock %}
 
-{% block body %}
+{% block page %}
+<section>
   <h1>Are you sure you want to archive {{ object.name }}?</h1>
   <br>
   <div>
@@ -16,7 +17,8 @@
     <form method="post">
       {% csrf_token %}
       {{ form.as_p }}
-      <button type="submit">Archive</button>
+      <button type="submit" class="orange_button">Archive</button>
     </form>
   </div>
+</section>
 {% endblock %}
