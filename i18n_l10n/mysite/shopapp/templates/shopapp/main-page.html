@@ -1,5 +1,7 @@
 {% extends 'myauth/base.html' %}
 
+{% load i18n %}
+
 {% block title %}
   Mysite
 {% endblock %}
@@ -13,35 +15,35 @@
     <div class="refs">
         <div class="menu">
             <div>
-                <a href="{% url 'myauth:about-me' %}">Profile</a>
+                <a href="{% url 'myauth:about-me' %}">{% translate 'Profile' context 'profile from menu' %}</a>
             </div>
             <div>
-                <a href="{% url 'shopapp:products_list' %}">Products</a>
+                <a href="{% url 'shopapp:products_list' %}">{% translate 'Products' context 'products from menu' %}</a>
             </div>
             <div>
-                <a href="{% url 'shopapp:orders_list' %}">Orders</a>
+                <a href="{% url 'shopapp:orders_list' %}">{% translate 'Orders' context 'orders from menu' %}</a>
             </div>
         </div>
         <div class="log-butttons">
           {% if user.is_authenticated %}
-            <div>Hello, {{user.username}}!</div>
+            <div>{% blocktranslate with username=user.username%}Hello, {{username}}!{% endblocktranslate %}</div>
             <div>
               <form method="post" action="{% url 'myauth:logout' %}">
               {% csrf_token %}
-              <button class="orange_button" type="submit">Logout</button>
+              <button class="orange_button" type="submit">{% translate 'Logout' context 'button logout' %}</button>
               </form>
             </div>
           {% else %}
             <div>
               <form method="post" action="{% url 'myauth:login' %}">
                 {% csrf_token %}
-                <button class="orange_button" type="submit">Login</button>
+                <button class="orange_button" type="submit">{% translate 'Login' context 'button login' %}</button>
               </form>
             </div>
             <div>
               <form method="post" action="{% url 'myauth:register' %}">
                 {% csrf_token %}
-                <button class="orange_button" type="submit">Register</button>
+                <button class="orange_button" type="submit">{% translate 'Register' context 'button register' %}</button>
               </form>
             </div>
           {% endif %}
@@ -51,7 +53,7 @@
 </header>
   {% block page %}
   <section>
-    <h2>Main page</h2>
+    <h2>{% blocktranslate %}Main page{% endblocktranslate %}</h2>
   </section>
   {% endblock %}
 {% endblock %}
