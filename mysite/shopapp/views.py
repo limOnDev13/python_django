@@ -8,8 +8,10 @@ from django.shortcuts import render, reverse
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from rest_framework.viewsets import ModelViewSet
 
 from .models import Product, Order
+from .serializers import ProductSerializer, OrderSerializer
 
 
 class ShopIndexView(View):
@@ -111,3 +113,13 @@ def export_orders_to_json(request: HttpRequest) -> JsonResponse:
         ]
     }
     return JsonResponse(result_json)
+
+
+class ProductViewSet(ModelViewSet):
+    queryset = Product.objects.select_related("created_by").all()
+    serializer_class = ProductSerializer
+
+
+class OrderViewSet(ModelViewSet):
+    queryset = Order.objects.select_related("user").prefetch_related("products").all()
+    serializer_class = OrderSerializer
