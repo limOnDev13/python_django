@@ -1,101 +1,21 @@
+from typing import List, Dict, Any
+import random
 from string import ascii_letters
-from random import choices
 
-from django.conf import settings
-from django.contrib.auth.models import User
 from django.test import TestCase
+from django.contrib.auth.models import User, Permission
 from django.urls import reverse
 
-from shopapp.models import Product
-from shopapp.utils import add_two_numbers
+from .models import Order, Product
 
 
-class AddTwoNumbersTestCase(TestCase):
-    def test_add_two_numbers(self):
-        result = add_two_numbers(2, 3)
-        self.assertEqual(result, 5)
-
-
-class ProductCreateViewTestCase(TestCase):
-    def setUp(self) -> None:
-        self.product_name = "".join(choices(ascii_letters, k=10))
-        Product.objects.filter(name=self.product_name).delete()
-
-    def test_create_product(self):
-        response = self.client.post(
-            reverse('shopapp:product_create'),
-            {
-
-                "name": self.product_name,
-                "price": "123.45",
-                "description": "product description",
-                "discount": 10,
-            }
-        )
-        self.assertRedirects(response, reverse('shopapp:products_list'))
-        self.assertTrue(
-            Product.objects.filter(name=self.product_name).exists()
-        )
-
-
-class ProductDetailsTestCase(TestCase):
-
+# Create your tests here.
+class OrderDetailTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
-        # будет выполнено перед всеми тестами в классе
-        cls.product = Product.objects.create(name="Best Product")
-
-    @classmethod
-    def tearDownClass(cls):
-        # будет выполнено после всех тестов в классе
-        cls.product.delete()
-
-    # def setUp(self):
-    #     # будет выполнено перед каждым тестом
-    #     self.product = Product.objects.create(name="Best Product")
-    #
-    # def tearDown(self):
-    #     # будет выполнено после каждого теста
-    #     self.product.delete()
-
-    def test_get_product(self):
-        response = self.client.get(
-            reverse(
-                'shopapp:product_details',
-                kwargs={"pk": self.product.pk},
-            ),
-        )
-        self.assertEqual(response.status_code, 200)
-
-    def test_get_product_and_check_links(self):
-        response = self.client.get(
-            reverse(
-                'shopapp:product_details',
-                kwargs={"pk": self.product.pk},
-            ),
-        )
-        self.assertContains(response, self.product.name)
-
-
-class ProductsListTestCase(TestCase):
-    fixtures = [
-        'products-fixture.json',
-    ]
-
-    def test_products(self):
-        response = self.client.get(reverse('shopapp:products_list'))
-        self.assertQuerysetEqual(
-            qs=Product.objects.filter(archived=False).all(),
-            values=(p.pk for p in response.context['products']),
-            transform=lambda p: p.pk,
-        )
-        self.assertTemplateUsed(response, 'shopapp/products-list.html')
-
-
-class OrdersListViewTestCase(TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.user = User.objects.create_user(username='test', password='test')
+        permission: Permission = Permission.objects.get(codename="view_order")
+        cls.user: User = User.objects.create_user(username="test", password="test")
+        cls.user.user_permissions.add(permission)
 
     @classmethod
     def tearDownClass(cls):
@@ -103,38 +23,196 @@ class OrdersListViewTestCase(TestCase):
 
     def setUp(self):
         self.client.force_login(self.user)
-
-    def test_orders_view(self):
-        response = self.client.get(reverse('shopapp:orders_list'))
-        self.assertContains(response, 'Orders')
-
-    def test_orders_view_not_authenticated(self):
-        self.client.logout()
-        response = self.client.get(reverse('shopapp:orders_list'))
-        self.assertEqual(response.status_code, 302)
-        self.assertIn(str(settings.LOGIN_URL), response.url)
-
-
-class ProductsExportViewTestCase(TestCase):
-    fixtures = [
-        'products-fixture.json',
-    ]
-
-    def test_get_products_view(self):
-        response = self.client.get(reverse('shopapp:products-export'))
-        self.assertEqual(response.status_code, 200)
-        products = Product.objects.order_by('pk').all()
-        expected_data = [
-            {
-                "pk": product.pk,
-                "name": product.name,
-                "price": str(product.price),
-                "archived": product.archived,
-            }
-            for product in products
-        ]
-        products_data = response.json()
-        self.assertEqual(
-            products_data["products"],
-            expected_data,
+        self.order: Order = Order.objects.create(
+            delivery_address="test_address",
+            promocode="test_promo",
+            user=self.user,
         )
+
+    def tearDown(self):
+        self.order.delete()
+
+    def test_order_details(self):
+        response = self.client.get(
+            reverse(
+                "shopapp:order_details",
+                kwargs={"pk": self.order.pk}
+            ),
+        )
+        self.assertContains(response, self.order.delivery_address)
+        self.assertContains(response, self.order.promocode)
+
+        # Check context
+        context_order: Order = response.context["object"]
+        self.assertEqual(context_order.pk, self.order.pk)
+
+
+class OrdersExportWithoutFixturesTestCase(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        # creating of user with permission
+        cls.user_with_per: User = User.objects.create_user(
+            username="test_user_with_permission",
+            password="test_password"
+        )
+        cls.user_with_per.is_staff = True
+        cls.user_with_per.save()
+
+        # creating of user without permission
+        cls.user_without_per: User = User.objects.create_user(
+            username="test_user_without_permission",
+            password="test_password"
+        )
+        cls.user_without_per.is_staff = False
+        cls.user_without_per.save()
+
+        # creating list of users for orders and products
+        cls.users: List[User] = [
+            User.objects.create_user(
+                username="".join(random.choices(ascii_letters, k=5)),
+                password="".join(random.choices(ascii_letters, k=5)),
+            )
+            for _ in range(5)
+        ]
+        cls.users.append(cls.user_with_per)
+        cls.users.append(cls.user_without_per)
+        # creating list of products
+        cls.products: List[Product] = [
+            Product.objects.create(
+                name="".join(random.choices(ascii_letters, k=5)),
+                description="".join(random.choices(ascii_letters, k=10)),
+                price=round(random.uniform(1, 100), 2),
+                discount=round(random.uniform(1, 100), 2),
+                created_by=random.choice(cls.users),
+                archived=random.choice((True, False))
+            )
+            for _ in range(10)
+        ]
+        # creating list of orders
+        cls.orders: List[Order] = [
+            Order.objects.create(
+                delivery_address="".join(random.choices(ascii_letters, k=10)),
+                promocode="".join(random.choices(ascii_letters, k=5)),
+                user=random.choice(cls.users),
+            )
+        ]
+        for order in cls.orders:
+            order.products.set(random.choices(cls.products, k=random.randint(0, 10)))
+            order.save()
+
+        # assemble expected_data
+        cls.expected_data: Dict[str, Any] = {
+            "orders": [
+                {
+                    "id": order.pk,
+                    "delivery_address": order.delivery_address,
+                    "promocode": order.promocode,
+                    "user_id": order.user.pk,
+                    "products_ids": [
+                        product.pk
+                        for product in order.products.all()
+                    ]
+                }
+                for order in cls.orders
+            ],
+        }
+
+    @classmethod
+    def tearDownClass(cls):
+        for order in cls.orders:
+            order.delete()
+        for product in cls.products:
+            product.delete()
+        for user in cls.users:
+            user.delete()
+
+    def setUp(self):
+        self.client.force_login(self.user_with_per)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_get_orders_info(self):
+        response = self.client.get(reverse("shopapp:export-orders"))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.headers["content-type"], "application/json"
+        )
+        self.assertJSONEqual(response.content, self.expected_data)
+
+    def test_not_staff_get_orders_info(self):
+        self.client.logout()
+        self.client.force_login(self.user_without_per)
+        response = self.client.get(reverse("shopapp:export-orders"))
+        # check - response is redirect to login
+        self.assertEqual(response.status_code, 302)
+
+
+class OrdersExportTestCase(TestCase):
+    fixtures = (
+        "auth_user-fixture.json",
+        "shopapp_order-fixture.json",
+        "shopapp_products-fixture.json"
+    )
+
+    @classmethod
+    def setUpClass(cls):
+        # creating of user with permission
+        cls.user_with_per: User = User.objects.create_user(
+            username="test_user_with_permission",
+            password="test_password"
+        )
+        cls.user_with_per.is_staff = True
+        cls.user_with_per.save()
+
+        # creating of user without permission
+        cls.user_without_per: User = User.objects.create_user(
+            username="test_user_without_permission",
+            password="test_password"
+        )
+        cls.user_without_per.is_staff = False
+        cls.user_without_per.save()
+
+        # assemble expected_data
+        cls.expected_data: Dict[str, Any] = {
+            "orders": [
+                {
+                    "id": order.pk,
+                    "delivery_address": order.delivery_address,
+                    "promocode": order.promocode,
+                    "user_id": order.user.pk,
+                    "products_ids": [
+                        product.pk
+                        for product in order.products.all()
+                    ]
+                }
+                for order in Order.objects.all()
+            ],
+        }
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.user_with_per.delete()
+        cls.user_without_per.delete()
+
+    def setUp(self):
+        self.client.force_login(self.user_with_per)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_get_orders_info(self):
+        response = self.client.get(reverse("shopapp:export-orders"))
+        print(response)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.headers["content-type"], "application/json"
+        )
+        self.assertJSONEqual(response.content, self.expected_data)
+
+    def test_not_staff_get_orders_info(self):
+        self.client.logout()
+        self.client.force_login(self.user_without_per)
+        response = self.client.get(reverse("shopapp:export-orders"))
+        # check - response is redirect to login
+        self.assertEqual(response.status_code, 302)
