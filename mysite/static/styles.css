@@ -25,6 +25,10 @@ section {
 }
 h2 {
     font-size: 20px;
+    word-wrap: break-word;
+}
+p, h3 {
+    word-wrap: break-word;
 }
 input, textarea {
     box-shadow: none;
@@ -96,4 +100,8 @@ header h1 {
     height: 30px;
     background-color: rgba(255, 166, 0);
     border-radius: 10px;
+}
+
+.tags {
+    color: rgba(255, 166, 0);
 }
