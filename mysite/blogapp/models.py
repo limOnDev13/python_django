@@ -11,7 +11,7 @@ class Category(models.Model):
     name = models.CharField(max_length=40)
 
 
-class Tag(models.CharField):
+class Tag(models.Model):
     name = models.CharField(max_length=20)
 
 
