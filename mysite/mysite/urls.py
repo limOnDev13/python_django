@@ -19,7 +19,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls.i18n import i18n_patterns
 
-urlpatterns = list()
+urlpatterns = [
+    path("api/", include("myapiapp.urls"))
+]
 
 urlpatterns.extend(
     i18n_patterns(
