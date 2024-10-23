@@ -1,0 +1,27 @@
+{% extends 'shopapp/main-page.html' %}
+
+{% block title %}
+  Product #{{ product.pk }}
+{% endblock %}
+
+{% block page %}
+<section>
+  <h1>Product <strong>{{ product.name }}</strong></h1>
+  <div>
+    <p>Description: <em>{{ product.description|linebreaks }}</em></p>
+    <p>Price: {{ product.price }}</p>
+    <p>Discount: {{ product.discount }}</p>
+    <p>Created by {{product.created_by}}</p>
+    <p>Archived: {{ product.archived }}</p>
+  </div>
+  <div>
+    <a href="{% url 'shopapp:product_update' pk=product.pk %}">Update product</a>
+  </div>
+  <div>
+    <a href="{% url 'shopapp:product_delete' pk=product.pk %}">Archive product</a>
+  </div>
+  <div>
+    <a href="{% url 'shopapp:products_list' %}">Back to products list</a>
+  </div>
+</section>
+{% endblock %}
