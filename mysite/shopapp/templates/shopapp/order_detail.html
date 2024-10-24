@@ -1,0 +1,33 @@
+{% extends 'shopapp/main-page.html' %}
+
+{% load i18n %}
+
+{% block title %}
+  {% blocktranslate with object_pk=object.pk context 'Title of page order details' %}Order #{{ object_pk }} details{% endblocktranslate %}
+{% endblock %}
+
+{% block page %}
+<section>
+  <h1>{% blocktranslate with object_pk=object.pk context 'h1 order details'%}Order #{{ object_pk }}{% endblocktranslate %}</h1>
+  <div>
+    {% firstof object.user.first_name object.user.username as order_by_user %}
+    {% blocktranslate %}
+    <p>Order by {{order_by_user}}</p>
+    {% endblocktranslate %}
+    <p>{% blocktranslate with promo=object.promocode%}Promocode: <code>{{ promo }}</code>{% endblocktranslate %}</p>
+    <p>{% blocktranslate with address=object.delivery_address%}Delivery address: {{ address }}{% endblocktranslate %}</p>
+    <div>
+      {% translate 'Products in order' context 'list of products in order' %}
+      <ul>
+        {% for product in object.products.all %}
+          <li>{% blocktranslate with name=product.name price=product.price%}{{ name }} for ${{ price }}{% endblocktranslate %}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div>
+    <a href="{% url 'shopapp:orders_list' %}">{% translate 'Back to orders' context 'ref on page with order details'%}</a>
+  </div>
+</section>
+{% endblock %}
