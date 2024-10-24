@@ -166,4 +166,8 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Mysite with shop app and custom auth",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ]
 }
