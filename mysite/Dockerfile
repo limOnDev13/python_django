@@ -4,7 +4,9 @@ WORKDIR /app
 
 ENV PYTHONPATHBUFFERED = 1
 
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip poetry
+RUN poetry config virtualenvs.create false --local
+COPY pyproject.toml poetry.lock ./
+RUN poetry install
 
 COPY . .
