@@ -1,11 +1,15 @@
 import re
 from typing import List, Dict, Any
+import csv
 
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
 from django.contrib.syndication.views import Feed
+from django.core import serializers
+from django.core.cache import cache
 from django.http import HttpResponse, HttpRequest, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, reverse
+from django.shortcuts import render, reverse, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -164,3 +168,38 @@ class LatestProductsFeed(Feed):
 
     def item_description(self, item: Product):
         return item.description[:200]
+
+
+class UserOrdersListView(LoginRequiredMixin, ListView):
+    template_name = "shopapp/user-orders.html"
+
+    def get_queryset(self):
+        self.owner = get_object_or_404(User, pk=self.kwargs["user_id"])
+
+        return (Order.objects.filter(user=self.owner)
+                .prefetch_related("products"))
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=None, **kwargs)
+
+        # В задании написано, что нужно изменить контекст,
+        # но не написано, что именно нужно изменить
+        context["owner"] = {
+            "username": self.owner.username,
+            "pk": self.owner.pk,
+        }
+        return context
+
+
+def export_user_orders_csv(request: HttpRequest, user_id: int) -> HttpResponse:
+    cache_key: str = f"{user_id}_user_orders"
+    data = cache.get(cache_key)
+
+    if not data:
+        print("Cache is empty!")
+        owner: User = get_object_or_404(User, pk=user_id)
+        orders: List[Order] = Order.objects.filter(user=owner).all()
+        data = serializers.serialize('json', orders)
+        cache.set(cache_key, data, 300)
+
+    return HttpResponse(data, content_type='application/json')
