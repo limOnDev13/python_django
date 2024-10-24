@@ -26,7 +26,7 @@ urlpatterns = [
 urlpatterns.extend(
     i18n_patterns(
         path('admin/', admin.site.urls),
-        path('shop/', include('shopapp.urls')),
+        path('', include('shopapp.urls')),
         path('accounts/', include('myauth.urls')),
     )
 )
