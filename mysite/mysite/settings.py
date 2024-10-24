@@ -30,7 +30,9 @@ SECRET_KEY = 'django-insecure-hvxn%qq=gyw^4*o2lo1#bw0=wh#ux9s8h!=@c608arf_gz3+^7
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+INTERNAL_IPS = [
+    "127.0.0.1"
+]
 
 # Application definition
 
@@ -45,6 +47,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_filters",
     "drf_spectacular",
+    "debug_toolbar",
 
     'shopapp.apps.ShopappConfig',
     'myauth.apps.MyauthConfig',
@@ -60,6 +63,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "django.middleware.locale.LocaleMiddleware",
+
+    "debug_toolbar.middleware.DebugToolbarMiddleware"
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -149,6 +154,27 @@ MEDIA_ROOT = BASE_DIR / "upload"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "base": {
+            "format": "[%(levelname)s] : %(asctime)s | %(name)s | %(funcName)s: %(message)s"
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "DEBUG",
+            "formatter": "base"
+        },
+    },
+    "root": {
+        "handlers": ["console", ],
+        "level": "DEBUG",
+    }
+}
 
 LOGIN_REDIRECT_URL = reverse_lazy("myauth:about-me")
 LOGIN_URL = reverse_lazy("myauth:login")
