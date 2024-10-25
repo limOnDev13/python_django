@@ -1,0 +1,59 @@
+{% extends 'blogapp/base.html' %}
+
+{% load i18n %}
+
+{% block title %}
+  Mysite
+{% endblock %}
+
+
+{% block body %}
+<header>
+    <div class="site-name">
+    <h1>Mysite</h1>
+    </div>
+    <div class="refs">
+        <div class="menu">
+            <div>
+                <a href="{% url 'myauth:about-me' %}">{% translate 'Profile' context 'profile from menu' %}</a>
+            </div>
+            <div>
+                <a href="{% url 'shopapp:products_list' %}">{% translate 'Products' context 'products from menu' %}</a>
+            </div>
+            <div>
+                <a href="{% url 'shopapp:orders_list' %}">{% translate 'Orders' context 'orders from menu' %}</a>
+            </div>
+        </div>
+        <div class="log-butttons">
+          {% if user.is_authenticated %}
+            <div>{% blocktranslate with username=user.username%}Hello, {{username}}!{% endblocktranslate %}</div>
+            <div>
+              <form method="post" action="{% url 'myauth:logout' %}">
+              {% csrf_token %}
+              <button class="orange_button" type="submit">{% translate 'Logout' context 'button logout' %}</button>
+              </form>
+            </div>
+          {% else %}
+            <div>
+              <form method="post" action="{% url 'myauth:login' %}">
+                {% csrf_token %}
+                <button class="orange_button" type="submit">{% translate 'Login' context 'button login' %}</button>
+              </form>
+            </div>
+            <div>
+              <form method="post" action="{% url 'myauth:register' %}">
+                {% csrf_token %}
+                <button class="orange_button" type="submit">{% translate 'Register' context 'button register' %}</button>
+              </form>
+            </div>
+          {% endif %}
+        </div>
+    </div>
+
+</header>
+  {% block page %}
+  <section>
+    <h2>{% blocktranslate %}Main page{% endblocktranslate %}</h2>
+  </section>
+  {% endblock %}
+{% endblock %}

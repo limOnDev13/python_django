@@ -48,6 +48,7 @@ INSTALLED_APPS = [
 
     'shopapp.apps.ShopappConfig',
     'myauth.apps.MyauthConfig',
+    "blogapp.apps.BlogappConfig",
 ]
 
 MIDDLEWARE = [
@@ -66,7 +67,8 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, "myauth", "templates", "myauth")],
+        'DIRS': [os.path.join(BASE_DIR, "myauth", "templates", "myauth"),
+                 os.path.join(BASE_DIR, "blogapp", "templates", "blogapp")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -162,7 +164,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.SessionAuthentication",
-    ]
+    ],
 }
 
 SPECTACULAR_SETTINGS = {
