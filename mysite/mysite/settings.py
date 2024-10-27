@@ -14,7 +14,7 @@ import os
 from pathlib import Path
 
 from django.urls import reverse_lazy
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _loc
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "django.contrib.sitemaps",
 
     "rest_framework",
     "django_filters",
@@ -138,8 +139,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 LANGUAGES = [
-    ("en", _("English")),
-    ("ru", _("Russian")),
+    ("en", _loc("English")),
+    ("ru", _loc("Russian")),
 ]
 
 TIME_ZONE = 'UTC'
