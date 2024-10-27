@@ -3,6 +3,7 @@ from typing import List, Dict, Any
 
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.contrib.syndication.views import Feed
 from django.http import HttpResponse, HttpRequest, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, reverse
 from django.urls import reverse_lazy
@@ -148,3 +149,18 @@ class OrderViewSet(ModelViewSet):
         "created_at",
         "user",
     ]
+
+
+class LatestProductsFeed(Feed):
+    title = "List of products (latest)"
+    description = "Updates on changes and addition list products"
+    link = reverse_lazy("shopapp:products_list")
+
+    def items(self):
+        return Product.objects.order_by("-created_at")[:5]
+
+    def item_title(self, item: Product):
+        return item.name
+
+    def item_description(self, item: Product):
+        return item.description[:200]
