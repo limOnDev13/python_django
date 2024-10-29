@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
+from os import getenv
 
 from pathlib import Path
 
@@ -24,15 +25,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-hvxn%qq=gyw^4*o2lo1#bw0=wh#ux9s8h!=@c608arf_gz3+^7'
+SECRET_KEY = getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = getenv("DJANGO_DEBUG", "0") == "1"
 
 ALLOWED_HOSTS = [
     "0.0.0.0",
     "127.0.0.1"
-]
+] + getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
 INTERNAL_IPS = [
     "127.0.0.1"
 ]
@@ -174,6 +175,7 @@ MEDIA_ROOT = BASE_DIR / "upload"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOGLEVEL = getenv("DJANGO_LOGLEVEL", "info").upper()
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -185,13 +187,13 @@ LOGGING = {
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
-            "level": "DEBUG",
+            "level": LOGLEVEL,
             "formatter": "base"
         },
     },
     "root": {
         "handlers": ["console", ],
-        "level": "DEBUG",
+        "level": "INFO",
     }
 }
 
