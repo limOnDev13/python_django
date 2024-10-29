@@ -14,6 +14,8 @@ from .views import (
     ProductViewSet,
     OrderViewSet,
     LatestProductsFeed,
+    UserOrdersListView,
+    export_user_orders_csv,
 )
 
 app_name = "shopapp"
@@ -34,4 +36,6 @@ urlpatterns = [
     path("orders/export/", export_orders_to_json, name="export-orders"),
     path("api/", include(routers.urls)),
     path("products/latest/feed/", LatestProductsFeed(), name="products-feed"),
+    path("users/<int:user_id>/orders/", UserOrdersListView.as_view(), name="user-orders"),
+    path("users/<int:user_id>/orders/export/", export_user_orders_csv, name="user-orders-export"),
 ]
